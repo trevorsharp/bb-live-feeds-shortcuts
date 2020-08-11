@@ -6,7 +6,7 @@
   "version": "1.0",
   "content_scripts": [
     {
-      "matches": ["htstps://www.cbs.com/shows/big_brother/live_feed/stream/"],
+      "matches": ["https://www.cbs.com/shows/big_brother/live_feed/stream/"],
       "js": ["injector.js"],
       "run_at": "document_end",
       "all_frames": true
