@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "BB Live Feeds Shortcuts",
+  "short_name": "BB Live Feeds Shortcuts",
+  "description": "Easily control Big Brother live feeds with keyboard shortcuts",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["htstps://www.cbs.com/shows/big_brother/live_feed/stream/"],
+      "js": ["injector.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": ["contentscript.js"]
+}
