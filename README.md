@@ -3,19 +3,28 @@
 ### Keyboard Shortcuts:
 
 - `Q` : Switch to Quad View
-- `A` : Video Quality Auto
-- `S` : Video Quality High
+- `W` : Switch to Cam 1
+- `E` : Switch to Cam 2
+- `R` : Switch to Cam 3
+- `T` : Switch to Cam 4
+
+- `F` : Toggle Fullscreen
+
+- `A` : Video Quality - Auto
+- `S` : Video Quality - High
+- `Z` : Video Quality - Medium
+- `X` : Video Quality - Low
 
 - `Space` : Play / Pause
-- `M` : Skip Back 2m
-- `,` / `<` : Skip Back 30s
-- `.` / `>`: Skip Forward 30s
-- `/` : Skip Forward 2m
+- `Left Arrow` : Skip Back 30s
+- `Right Arrow` : Skip Forward 30s
 
-- `Left Arrow` : Audio from Left
-- `Right Arrow` : Audio from Right
-- `Down Arrow` : Audio from Left / Right Split
-- `Up Arrow` : Audio from Left / Right Mixed
+- `Up Arrow` : Volume Up
+- `Down Arrow` : Volume Down
+- `,` / `<` : Audio from Left
+- `.` / `>` : Audio from Right
+- `/` / `?` : Audio from Left and Right
+- `M` : Mute / Unmute
 
 - `1` : Speed 1.00x
 - `2` : Speed 1.25x
