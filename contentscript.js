@@ -1,31 +1,26 @@
 const keyboardShortcuts = [
-  ["1", () => setSpeed(1.0)],
-  ["2", () => setSpeed(1.25)],
-  ["3", () => setSpeed(1.5)],
-  ["4", () => setSpeed(1.75)],
-  ["5", () => setSpeed(2.0)],
-  ["6", () => setSpeed(2.25)],
-  ["7", () => setSpeed(2.5)],
-  ["8", () => setSpeed(3.0)],
-  ["9", () => setSpeed(5.0)],
-  ["0", () => setSpeed(10)],
+  ["1", () => setCamera(1)],
+  ["2", () => setCamera(2)],
+  ["3", () => setCamera(3)],
+  ["4", () => setCamera(4)],
+  ["5", () => setCamera(5)],
+  ["q", () => setCamera(5)],
   ["a", () => setQuality(-1)],
   ["s", () => setQuality(5)],
-  ["z", () => setQuality(3)],
-  ["x", () => setQuality(1)],
-  ["q", () => setCamera(5)],
-  ["w", () => setCamera(1)],
-  ["e", () => setCamera(2)],
-  ["r", () => setCamera(3)],
-  ["t", () => setCamera(4)],
   ["f", () => toggleFullscreen()],
+  [",", () => changeSpeed(-0.25)],
+  [".", () => changeSpeed(0.25)],
+  ["/", () => setSpeed(1)],
   ["m", () => toggleMute()],
-  [",", () => setAudioChannel("left")],
-  [".", () => setAudioChannel("right")],
-  ["/", () => setAudioChannel("stereo")],
+  ["[", () => setAudioChannel("left")],
+  ["]", () => setAudioChannel("right")],
+  ["\\", () => setAudioChannel("stereo")],
   [" ", () => playPause()],
-  ["ArrowUp", () => volumeUp()],
-  ["ArrowDown", () => volumeDown()],
+  ["k", () => playPause()],
+  ["j", () => seek(-120)],
+  ["l", () => seek(120)],
+  ["ArrowDown", () => changeVolume(-0.2)],
+  ["ArrowUp", () => changeVolume(0.2)],
   ["ArrowLeft", () => seek(-30)],
   ["ArrowRight", () => seek(30)],
 ];
@@ -40,11 +35,25 @@ document.onkeydown = (event) => {
   }
 };
 
+const MAX_SPEED = 5;
+const MIN_SPEED = 0.25;
+
 const setSpeed = (speed) => {
   $(function () {
     const player = $B.videoPlayer;
     const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
     backend.setPlaybackRate(speed);
+  });
+};
+
+const changeSpeed = (amount) => {
+  $(function () {
+    const player = $B.videoPlayer;
+    const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
+    var speed = backend.getPlaybackRate() + amount;
+    speed = speed > MAX_SPEED ? MAX_SPEED : speed;
+    speed = speed < MIN_SPEED ? MIN_SPEED : speed;
+    setSpeed(speed);
   });
 };
 
@@ -87,6 +96,8 @@ const playPause = () => {
 var audioNodes = [];
 var volumeLevel = 1;
 var isMuted = false;
+const MAX_VOLUME = 4;
+const MIN_VOLUME = 0;
 
 const setVolume = (volume) => {
   audioNodes.forEach((audioNode) => (audioNode.gainNode.gain.value = volume));
@@ -97,15 +108,11 @@ const toggleMute = () => {
   setVolume(isMuted ? 0 : volumeLevel);
 };
 
-const volumeUp = () => {
+const changeVolume = (amount) => {
   isMuted = false;
-  volumeLevel += volumeLevel < 4 ? 0.2 : 0;
-  setVolume(volumeLevel);
-};
-
-const volumeDown = () => {
-  isMuted = false;
-  volumeLevel -= volumeLevel > 0 ? 0.2 : 0;
+  volumeLevel += amount;
+  volumeLevel = volumeLevel > MAX_VOLUME ? MAX_VOLUME : volumeLevel;
+  volumeLevel = volumeLevel < MIN_VOLUME ? MIN_VOLUME : volumeLevel;
   setVolume(volumeLevel);
 };
 
