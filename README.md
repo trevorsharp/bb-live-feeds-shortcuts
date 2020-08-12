@@ -21,10 +21,10 @@
 
 `Up Arrow` : Volume Up  
 `Down Arrow` : Volume Down  
+`M` : Mute / Unmute  
 `,` / `<` : Audio from Left  
 `.` / `>` : Audio from Right  
-`/` / `?` : Audio from Left and Right  
-`M` : Mute / Unmute
+`/` / `?` : Audio from Left and Right
 
 `1` : Speed 1.00x  
 `2` : Speed 1.25x  
