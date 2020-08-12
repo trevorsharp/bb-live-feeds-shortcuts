@@ -1,84 +1,59 @@
+const keyboardShortcuts = [
+  ["1", () => setSpeed(1.0)],
+  ["2", () => setSpeed(1.25)],
+  ["3", () => setSpeed(1.5)],
+  ["4", () => setSpeed(1.75)],
+  ["5", () => setSpeed(2.0)],
+  ["6", () => setSpeed(2.25)],
+  ["7", () => setSpeed(2.5)],
+  ["8", () => setSpeed(3.0)],
+  ["9", () => setSpeed(5.0)],
+  ["0", () => setSpeed(10)],
+  ["a", () => setQuality(-1)],
+  ["s", () => setQuality(5)],
+  ["z", () => setQuality(3)],
+  ["x", () => setQuality(1)],
+  ["q", () => setCamera(5)],
+  ["w", () => setCamera(1)],
+  ["e", () => setCamera(2)],
+  ["r", () => setCamera(3)],
+  ["t", () => setCamera(4)],
+  ["f", () => toggleFullscreen()],
+  ["m", () => toggleMute()],
+  [",", () => setAudioChannel("left")],
+  [".", () => setAudioChannel("right")],
+  ["/", () => setAudioChannel("stereo")],
+  [" ", () => playPause()],
+  ["ArrowUp", () => volumeUp()],
+  ["ArrowDown", () => volumeDown()],
+  ["ArrowLeft", () => seek(-30)],
+  ["ArrowRight", () => seek(30)],
+];
+
 document.onkeydown = (event) => {
-  if (event.keyCode === 49) {
-    setSpeed(1.0);
-  } else if (event.keyCode === 50) {
-    setSpeed(1.25);
-  } else if (event.keyCode === 51) {
-    setSpeed(1.5);
-  } else if (event.keyCode === 52) {
-    setSpeed(1.75);
-  } else if (event.keyCode === 53) {
-    setSpeed(2.0);
-  } else if (event.keyCode === 54) {
-    setSpeed(2.25);
-  } else if (event.keyCode === 55) {
-    setSpeed(2.5);
-  } else if (event.keyCode === 56) {
-    setSpeed(3.0);
-  } else if (event.keyCode === 57) {
-    setSpeed(5.0);
-  } else if (event.keyCode === 48) {
-    setSpeed(10.0);
-  } else if (event.keyCode === 65) {
-    setQuality(-1);
-  } else if (event.keyCode === 83) {
-    setQuality(5);
-  } else if (event.keyCode === 90) {
-    setQuality(3);
-  } else if (event.keyCode === 88) {
-    setQuality(1);
-  } else if (event.keyCode === 81) {
-    setCamera(5);
-  } else if (event.keyCode === 87) {
-    setCamera(1);
-  } else if (event.keyCode === 69) {
-    setCamera(2);
-  } else if (event.keyCode === 82) {
-    setCamera(3);
-  } else if (event.keyCode === 84) {
-    setCamera(4);
-  } else if (event.keyCode === 70) {
-    toggleFullscreen();
-  } else if (event.keyCode === 32) {
-    playPause();
-  } else if (event.keyCode === 190) {
-    setAudioChannel("right");
-  } else if (event.keyCode === 188) {
-    setAudioChannel("left");
-  } else if (event.keyCode === 191) {
-    setAudioChannel("stereo");
-  } else if (event.keyCode === 77) {
-    toggleMute();
-  } else if (event.keyCode === 38) {
+  const matchingShortcut = keyboardShortcuts.find(
+    (shortcut) => shortcut[0] === event.key
+  );
+  if (matchingShortcut) {
     event.preventDefault();
-    volumeUp();
-  } else if (event.keyCode === 40) {
-    event.preventDefault();
-    volumeDown();
-  } else if (event.keyCode === 37) {
-    event.preventDefault();
-    seek(-30);
-  } else if (event.keyCode === 39) {
-    event.preventDefault();
-    seek(30);
+    matchingShortcut[1]();
   }
 };
 
 const setSpeed = (speed) => {
   $(function () {
-    $B.videoPlayer.playerInstance.CVI_Mgr.RPM.currRP.facade.player.setPlaybackRate(
-      speed
-    );
+    const player = $B.videoPlayer;
+    const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
+    backend.setPlaybackRate(speed);
   });
 };
 
 const setQuality = (index) => {
   $(function () {
-    const backend =
-      $B.videoPlayer.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
-    $B.videoPlayer.playerApi.bblfJsPlayer.primaryPlayer.useDynamicSwitching(
-      index === -1
-    );
+    const player = $B.videoPlayer;
+    const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
+    const primaryPlayer = player.playerApi.bblfJsPlayer.primaryPlayer;
+    primaryPlayer.useDynamicSwitching(index === -1);
     backend.setAutoSwitchQualityFor("video", index === -1);
     backend.setQualityFor("video", index);
   });
@@ -92,6 +67,14 @@ const setCamera = (index) => {
   });
 };
 
+const seek = (secs) => {
+  $(function () {
+    const player = $B.videoPlayer;
+    const liveFeedPlayer = player.playerApi.bblfJsPlayer;
+    liveFeedPlayer.rewind(-1 * secs);
+  });
+};
+
 const toggleFullscreen = () => {
   document.getElementsByClassName("btn-full-screen")[0].click();
 };
@@ -101,76 +84,88 @@ const playPause = () => {
   video.paused ? video.play() : video.pause();
 };
 
-const seek = (secs) => {
-  $(function () {
-    $B.videoPlayer.playerApi.bblfJsPlayer.rewind(-1 * secs);
-  });
-};
-
-var audioContex = new AudioContext();
-var alreadySetUpNodes = [];
 var audioNodes = [];
 var volumeLevel = 1;
 var isMuted = false;
 
-const setAudioChannel = (audioChannel) =>
-  audioNodes.forEach((node) => adjustChannel(node, audioChannel));
+const setVolume = (volume) => {
+  audioNodes.forEach((audioNode) => (audioNode.gainNode.gain.value = volume));
+};
 
 const toggleMute = () => {
   isMuted = !isMuted;
-  audioNodes.forEach((node) => setVolume(node, isMuted ? 0 : volumeLevel));
+  setVolume(isMuted ? 0 : volumeLevel);
 };
 
 const volumeUp = () => {
   isMuted = false;
-  volumeLevel += volumeLevel < 4 ? 0.1 : 0;
-  audioNodes.forEach((node) => setVolume(node, volumeLevel));
+  volumeLevel += volumeLevel < 4 ? 0.2 : 0;
+  setVolume(volumeLevel);
 };
 
 const volumeDown = () => {
   isMuted = false;
-  volumeLevel -= volumeLevel > 0 ? 0.1 : 0;
-  audioNodes.forEach((node) => setVolume(node, volumeLevel));
+  volumeLevel -= volumeLevel > 0 ? 0.2 : 0;
+  setVolume(volumeLevel);
 };
 
-const setUpNode = (node) => {
-  alreadySetUpNodes.push(node);
-  audioNode = {};
-  audioNode.source = audioContex.createMediaElementSource(node);
-  audioNode.gainNode = audioContex.createGain();
-  audioNode.gainNode.gain.value = volumeLevel;
-  audioNode.source.connect(audioNode.gainNode, 0);
-  audioNode.gainNode.connect(audioContex.destination, 0);
-  audioNode.splitter = audioContex.createChannelSplitter(2);
-  audioNode.gainLeft = audioContex.createGain();
-  audioNode.gainRight = audioContex.createGain();
-  audioNode.splitter.connect(audioNode.gainLeft, 0);
-  audioNode.splitter.connect(audioNode.gainRight, 1);
-  audioNode.gainLeft.connect(audioContex.destination, 0);
-  audioNode.gainRight.connect(audioContex.destination, 0);
-  audioNodes.push(audioNode);
-};
+const setAudioChannel = (audioChannel) =>
+  audioNodes.forEach((audioNode) => {
+    try {
+      if (audioChannel === "left" || audioChannel === "right") {
+        audioNode.gainLeft.gain.value = audioChannel === "right" ? 0 : 1;
+        audioNode.gainRight.gain.value = audioChannel === "left" ? 0 : 1;
+        audioNode.gainNode.connect(audioNode.splitter, 0, 0);
+        audioNode.gainNode.disconnect(audioNode.destination, 0);
+      } else {
+        audioNode.gainNode.connect(audioNode.destination, 0);
+        audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
+      }
+    } catch (error) {}
+  });
 
-const adjustChannel = (audioNode, output) => {
-  try {
-    if (output === "left" || output === "right" || output == "mono") {
-      audioNode.gainLeft.gain.value = output === "right" ? 0 : 1;
-      audioNode.gainRight.gain.value = output === "left" ? 0 : 1;
-      audioNode.gainNode.disconnect(audioContex.destination, 0);
-      audioNode.gainNode.connect(audioNode.splitter, 0, 0);
-    } else {
-      audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
-      audioNode.gainNode.connect(audioContex.destination, 0);
-    }
-  } catch (error) {}
-};
-
-const setVolume = (audioNode, value) => (audioNode.gainNode.gain.value = value);
+var audioContex = new AudioContext();
+var alreadySetUpNodes = [];
 
 setInterval(
   () =>
-    document
-      .querySelectorAll("video,audio")
-      .forEach((node) => !alreadySetUpNodes.includes(node) && setUpNode(node)),
+    document.querySelectorAll("video,audio").forEach((node) => {
+      if (!alreadySetUpNodes.includes(node)) {
+        alreadySetUpNodes.push(node);
+        audioNode = {};
+        audioNode.source = audioContex.createMediaElementSource(node);
+        audioNode.destination = audioContex.destination;
+        audioNode.gainNode = audioContex.createGain();
+        audioNode.gainNode.gain.value = volumeLevel;
+        audioNode.source.connect(audioNode.gainNode, 0);
+        audioNode.gainNode.connect(audioNode.destination, 0);
+        audioNode.splitter = audioContex.createChannelSplitter(2);
+        audioNode.gainLeft = audioContex.createGain();
+        audioNode.gainRight = audioContex.createGain();
+        audioNode.splitter.connect(audioNode.gainLeft, 0);
+        audioNode.splitter.connect(audioNode.gainRight, 1);
+        audioNode.gainLeft.connect(audioNode.destination, 0);
+        audioNode.gainRight.connect(audioNode.destination, 0);
+        audioNodes.push(audioNode);
+      }
+    }),
   1000
 );
+
+//      Audio Flow Diagram
+//
+//                                    Optionally bypass splitter
+// +----------+    +------------+      for regular stereo audio        +---------------+
+// |  source  |--->|  gainNode  |------------------------------------->|  destination  |
+// +----------+    +-----+------+                                      +-------+-------+
+//                       |                          +------------+             ^
+//                       |             +----------->|  gainLeft  |----+        |
+//                       |             |            +------------+    |        |
+//                       |       +-----+------+                       |        |
+//                       +------>|  splitter  |                       |--------+
+//                               +-----+------+                       |
+//                                     |            +-------------+   |
+//                                     +----------->|  gainRight  |---+
+//                                                  +-------------+
+//                            Selectively adjust
+//                               L/R balance
