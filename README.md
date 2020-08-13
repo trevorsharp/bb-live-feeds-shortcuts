@@ -8,8 +8,8 @@
 `4` : Switch to Camera 4  
 `5` / `Q` : Switch to Quad View
 
-`F` : Toggle Fullscreen
-`Z` : Toggle Large Video (Hides other UI on page)
+`F` : Toggle Fullscreen  
+`Z` : Toggle Large Video (hides UI)
 
 `A` : Video Quality - Auto  
 `S` : Video Quality - High
