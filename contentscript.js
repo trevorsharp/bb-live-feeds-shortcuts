@@ -22,7 +22,7 @@ const keyboardShortcuts = [
   [['a'], () => setQuality(-1), () => 'Auto Quality'],
   [['s'], () => setQuality(5), () => 'High Quality'],
   [['f'], () => toggleFullscreen(), () => undefined],
-  [['z'], () => toggleLargeVideo(), () => undefined],
+  [['t'], () => toggleLargeVideo(), () => undefined],
   [['m'], () => toggleMute(), () => `${isMuted ? 'Mute' : 'Unmute'}`],
   [['['], () => setAudioChannel('left'), () => 'Left Audio'],
   [[']'], () => setAudioChannel('right'), () => 'Right Audio'],

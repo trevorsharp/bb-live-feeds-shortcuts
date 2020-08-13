@@ -9,7 +9,7 @@
 `5` / `Q` : Switch to Quad View
 
 `F` : Toggle Fullscreen  
-`Z` : Toggle Large Video (hides UI)
+`T` : Toggle Large Video / Theater Mode (hides UI)
 
 `A` : Video Quality - Auto  
 `S` : Video Quality - High
