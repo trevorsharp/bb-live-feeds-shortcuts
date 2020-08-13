@@ -239,3 +239,14 @@ alertInterval = setInterval(() => {
     clearInterval(alertInterval);
   } catch (error) {}
 }, 1000);
+
+var fullscreenClickHandlerInterval;
+fullscreenClickHandlerInterval = setInterval(() => {
+  try {
+    document.getElementsByClassName('btn-full-screen')[0].addEventListener('click', () => {
+      document.getElementById('cbsi-player-embed').classList.remove('largeVideo');
+      document.body.classList.remove('largeVideo');
+    });
+    clearInterval(fullscreenClickHandlerInterval);
+  } catch (error) {}
+}, 1000);
