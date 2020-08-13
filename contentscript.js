@@ -19,8 +19,6 @@ const keyboardShortcuts = [
   [['4'], () => setCamera(4), () => 'Camera 4'],
   [['5'], () => setCamera(5), () => 'Quad View'],
   [['q'], () => setCamera(5), () => 'Quad View'],
-  [['a'], () => setQuality(-1), () => 'Auto Quality'],
-  [['s'], () => setQuality(5), () => 'High Quality'],
   [['f'], () => toggleFullscreen(), () => undefined],
   [['t'], () => toggleLargeVideo(), () => undefined],
   [['m'], () => toggleMute(), () => `${isMuted ? 'Mute' : 'Unmute'}`],
@@ -52,15 +50,6 @@ document.onkeydown = event => {
   }
 };
 
-const setSpeed = speed => {
-  currentSpeed = speed;
-  $(function () {
-    const player = $B.videoPlayer;
-    const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
-    backend.setPlaybackRate(speed);
-  });
-};
-
 const changeSpeed = amount => {
   currentSpeed += amount;
   currentSpeed = currentSpeed > MAX_SPEED ? MAX_SPEED : currentSpeed;
@@ -68,48 +57,46 @@ const changeSpeed = amount => {
   setSpeed(currentSpeed);
 };
 
-const setQuality = index => {
+const setSpeed = speed => {
+  currentSpeed = speed;
   $(function () {
-    const player = $B.videoPlayer;
-    const backend = player.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
-    const primaryPlayer = player.playerApi.bblfJsPlayer.primaryPlayer;
-    primaryPlayer.useDynamicSwitching(index === -1);
-    backend.setAutoSwitchQualityFor('video', index === -1);
-    backend.setQualityFor('video', index);
+    const videoPlayer = $B.videoPlayer;
+    const player = videoPlayer.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
+    player.setPlaybackRate(speed);
   });
 };
 
 const setCamera = index => {
   $(function () {
-    const player = $B.videoPlayer;
-    player.switchCamera(index);
-    player.highlightCamera(index);
+    const videoPlayer = $B.videoPlayer;
+    videoPlayer.switchCamera(index);
+    videoPlayer.highlightCamera(index);
   });
 };
 
 const seek = secs => {
   $(function () {
-    const player = $B.videoPlayer;
-    const liveFeedPlayer = player.playerApi.bblfJsPlayer;
-    liveFeedPlayer.rewind(-1 * secs);
+    const videoPlayer = $B.videoPlayer;
+    const bblfJsPlayer = videoPlayer.playerApi.bblfJsPlayer;
+    bblfJsPlayer.rewind(-1 * secs);
   });
 };
 
 const seekDays = days => {
   $(function () {
-    const player = $B.videoPlayer;
-    const secondaryPlayer = player.playerApi.bblfJsPlayer;
-    const cameraNumber = player.getSavedCameraAngle();
+    const videoPlayer = $B.videoPlayer;
+    const bblfJsPlayer = videoPlayer.playerApi.bblfJsPlayer;
 
-    var date = new Date(secondaryPlayer.absoluteDateTime);
+    var date = new Date(bblfJsPlayer.absoluteDateTime);
     date.setDate(date.getDate() + days);
 
     var currentDate = new Date(Date.now());
     currentDate.setHours(0, 0, 0, 0);
 
+    const cameraNumber = videoPlayer.getSavedCameraAngle();
+
     if (date > currentDate) {
-      // Hack for go to live
-      setCamera(cameraNumber);
+      setCamera(cameraNumber); // Go to live
     } else {
       player.updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
     }

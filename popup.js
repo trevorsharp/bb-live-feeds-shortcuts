@@ -31,9 +31,6 @@ const keyboardShortcuts = [
   ['<', 'Decrease Playback Speed'],
   ['>', 'Increase Playback Speed'],
   ['/', 'Set Playback Speed to 1.00x'],
-  ['blank', 'blank'],
-  ['A', 'Auto Video Quality'],
-  ['S', 'High Video Quality'],
 ];
 
 const list = document.getElementById('shortcutList');

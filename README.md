@@ -36,9 +36,6 @@ Easily control BB live feeds with keyboard shortcuts
 `>` / `.` : Increase Playback Speed  
 `/` / `?` : Set Playback Speed to 1.00x
 
-`A` : Auto Video Quality  
-`S` : High Video Quality
-
 ### Setup Instructions
 
 1. Download / Clone this repo to your local machine
