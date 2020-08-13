@@ -36,6 +36,7 @@ body {
   color: white;
   padding: 10px 20px;
   font-family: 'Proxima Nova';
+  user-select: none;
 }
 
 h2 {
