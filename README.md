@@ -6,7 +6,7 @@
 `2` : Switch to Camera 2  
 `3` : Switch to Camera 3  
 `4` : Switch to Camera 4  
-`Q` / `5` : Switch to Quad View
+`5` / `Q` : Switch to Quad View
 
 `F` : Toggle Fullscreen
 
@@ -26,9 +26,9 @@
 `]` : Audio from Right Channel  
 `\` : Audio from Left and Right
 
-`<` / `,` : Increase Playback Speed by 0.25x  
-`>` / `.` : Decrease Playback Speed by 0.25x  
-`/` / `?` : Set Playback Speed to 1x
+`<` / `,` : Decrease Playback Speed by 0.25x  
+`>` / `.` : Increase Playback Speed by 0.25x  
+`/` / `?` : Set Playback Speed to 1.00x
 
 ### Setup Instructions
 
