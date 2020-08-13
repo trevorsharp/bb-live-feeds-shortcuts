@@ -15,8 +15,8 @@
 `S` : Video Quality - High
 
 `Space` / `K` : Play / Pause  
-`Left Arrow` : Skip Back 30s  
-`Right Arrow` : Skip Forward 30s
+`Left Arrow` : Skip Back 30 sec  
+`Right Arrow` : Skip Forward 30 sec
 
 `Up Arrow` : Volume Up  
 `Down Arrow` : Volume Down  
@@ -30,11 +30,11 @@
 `/` / `?` : Set Playback Speed to 1.00x
 
 `G` : Skip Back 1 day  
-`H` : Skip Back 30m  
-`J` : Skip Back 2m  
+`H` : Skip Back 1 hour  
+`J` : Skip Back 5 min  
 `K` : Play / Pause  
-`L` : Skip Forward 2m  
-`;` : Skip Forward 30m  
+`L` : Skip Forward 5 min  
+`;` : Skip Forward 1 hour  
 `'` : Skip Forward 1 day
 
 ### Setup Instructions
