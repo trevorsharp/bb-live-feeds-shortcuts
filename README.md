@@ -9,13 +9,12 @@
 `5` / `Q` : Switch to Quad View
 
 `F` : Toggle Fullscreen
+`Z` : Toggle Large Video (Hides other UI on page)
 
 `A` : Video Quality - Auto  
 `S` : Video Quality - High
 
 `Space` / `K` : Play / Pause  
-`J` : Skip Back 2m  
-`L` : Skip Forward 2m  
 `Left Arrow` : Skip Back 30s  
 `Right Arrow` : Skip Forward 30s
 
@@ -29,6 +28,14 @@
 `<` / `,` : Decrease Playback Speed by 0.25x  
 `>` / `.` : Increase Playback Speed by 0.25x  
 `/` / `?` : Set Playback Speed to 1.00x
+
+`G` : Skip Back 1 day  
+`H` : Skip Back 30m  
+`J` : Skip Back 2m  
+`K` : Play / Pause  
+`L` : Skip Forward 2m  
+`;` : Skip Forward 30m  
+`'` : Skip Forward 1 day
 
 ### Setup Instructions
 

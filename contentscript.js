@@ -12,10 +12,6 @@ var isMuted = false;
 
 var currentSpeed = 1;
 
-var alert = document.createElement('div');
-var alertText = document.createElement('p');
-var alertTimeout = setTimeout(() => {}, 10);
-
 const keyboardShortcuts = [
   [['1'], () => setCamera(1), () => 'Camera 1'],
   [['2'], () => setCamera(2), () => 'Camera 2'],
@@ -26,13 +22,18 @@ const keyboardShortcuts = [
   [['a'], () => setQuality(-1), () => 'Auto Quality'],
   [['s'], () => setQuality(5), () => 'High Quality'],
   [['f'], () => toggleFullscreen(), () => undefined],
+  [['z'], () => toggleLargeVideo(), () => undefined],
   [['m'], () => toggleMute(), () => `${isMuted ? 'Mute' : 'Unmute'}`],
   [['['], () => setAudioChannel('left'), () => 'Left Audio'],
   [[']'], () => setAudioChannel('right'), () => 'Right Audio'],
   [['\\'], () => setAudioChannel('stereo'), () => 'Stereo Audio'],
   [[' ', 'k'], () => playPause(), () => `${getIsPaused() ? 'Pause' : 'Play'}`],
+  [['h'], () => seek(-1800), () => '- 30 min'],
+  [[';'], () => seek(1800), () => '+ 30 min'],
   [['j'], () => seek(-120), () => '- 2 min'],
   [['l'], () => seek(120), () => '+ 2 min'],
+  [['g'], () => seekDays(-1), () => '- 1 day'],
+  [["'"], () => seekDays(1), () => '+ 1 day'],
   [['ArrowLeft'], () => seek(-30), () => '- 30 sec'],
   [['ArrowRight'], () => seek(30), () => '+ 30 sec'],
   [['ArrowDown'], () => changeVolume(-0.2), () => `Volume ${volumeLevel.toFixed(1)}`],
@@ -47,13 +48,7 @@ document.onkeydown = event => {
   if (matchingShortcut) {
     event.preventDefault();
     matchingShortcut[1]();
-    if (matchingShortcut[2]()) {
-      alert.style.opacity = 0;
-      alertText.innerHTML = matchingShortcut[2]();
-      alert.style.opacity = 1;
-      clearTimeout(alertTimeout);
-      alertTimeout = setTimeout(() => (alert.style.opacity = 0), 500);
-    }
+    showAlert(matchingShortcut[2]());
   }
 };
 
@@ -100,8 +95,34 @@ const seek = secs => {
   });
 };
 
+const seekDays = days => {
+  $(function () {
+    const player = $B.videoPlayer;
+    const secondaryPlayer = player.playerApi.bblfJsPlayer;
+    const cameraNumber = player.getSavedCameraAngle();
+
+    var date = new Date(secondaryPlayer.absoluteDateTime);
+    date.setDate(date.getDate() + days);
+
+    var currentDate = new Date(Date.now());
+    currentDate.setHours(0, 0, 0, 0);
+
+    if (date > currentDate) {
+      // Hack for go to live
+      setCamera(cameraNumber);
+    } else {
+      player.updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
+    }
+  });
+};
+
 const toggleFullscreen = () => {
   document.getElementsByClassName('btn-full-screen')[0].click();
+};
+
+const toggleLargeVideo = () => {
+  document.getElementById('cbsi-player-embed').classList.toggle('largeVideo');
+  document.body.classList.toggle('largeVideo');
 };
 
 const getIsPaused = () => document.querySelector('video').paused;
@@ -186,27 +207,33 @@ setInterval(
 //                            Selectively adjust
 //                               L/R balance
 
+// Alerts
+
+var alert = document.createElement('div');
+var alertText = document.createElement('p');
 alert.appendChild(alertText);
-alert.style.width = '100%';
-alert.style.position = 'absolute';
-alert.style.top = '43%';
-alert.style.textAlign = 'center';
-alert.style.zIndex = '9999';
-alert.style.margin = 'auto';
-alert.style.setProperty('-webkit-transition', 'opacity 0.2s ease-in-out');
-alertText.style.color = 'white';
-alertText.style.backgroundColor = 'rgba(1, 1, 1, 0.6)';
-alertText.style.display = 'inline';
-alertText.style.padding = '15px';
-alertText.style.borderRadius = '10px';
 
+alert.id = 'shortcutAlert';
+alertText.id = 'shortcutAlertText';
+alert.className = 'hidden';
 alertText.innerHTML = '';
-alert.style.opacity = 0;
 
-var interval;
-interval = setInterval(() => {
+var alertTimeout = setTimeout(() => {}, 10);
+
+const showAlert = message => {
+  if (message) {
+    alert.className = 'hidden';
+    alertText.innerHTML = message;
+    alert.className = 'visible';
+    clearTimeout(alertTimeout);
+    alertTimeout = setTimeout(() => (alert.className = 'hidden'), 500);
+  }
+};
+
+var alertInterval;
+alertInterval = setInterval(() => {
   try {
     document.getElementById('content_BBLF_SKIN_UVPJS_CONTAINER').prepend(alert);
-    clearInterval(interval);
+    clearInterval(alertInterval);
   } catch (error) {}
 }, 1000);

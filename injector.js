@@ -1,4 +1,4 @@
-var script = document.createElement("script");
-script.src = chrome.runtime.getURL("contentscript.js");
+var script = document.createElement('script');
+script.src = chrome.runtime.getURL('contentscript.js');
 document.head.appendChild(script);
 script.remove();

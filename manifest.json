@@ -8,6 +8,7 @@
     {
       "matches": ["https://www.cbs.com/shows/big_brother/live_feed/stream/"],
       "js": ["injector.js"],
+      "css": ["style.css"],
       "run_at": "document_end",
       "all_frames": true
     }

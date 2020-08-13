@@ -1,0 +1,41 @@
+#shortcutAlert {
+  width: 100% !important;
+  position: absolute !important;
+  top: 43% !important;
+  text-align: center !important;
+  z-index: 120000 !important;
+  margin: auto !important;
+  transition: opacity 0.2s ease-in-out !important;
+  -webkit-transition: opacity 0.2s ease-in-out !important;
+}
+
+#shortcutAlert.hidden {
+  opacity: 0 !important;
+}
+
+#shortcutAlert.visible {
+  opacity: 1 !important;
+  transition: 0 !important;
+  -webkit-transition: 0 !important;
+}
+
+#shortcutAlertText {
+  color: white !important;
+  background-color: rgba(1, 1, 1, 0.6) !important;
+  display: inline !important;
+  padding: 15px !important;
+  border-radius: 10px !important;
+}
+
+body.largeVideo {
+  overflow: hidden !important;
+}
+
+#cbsi-player-embed.largeVideo {
+  z-index: 110000 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
