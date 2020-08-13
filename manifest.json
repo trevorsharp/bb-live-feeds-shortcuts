@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "BB Live Feeds Shortcuts",
   "short_name": "BB Live Feeds Shortcuts",
-  "description": "Easily control Big Brother live feeds with keyboard shortcuts",
+  "description": "Easily control BB live feeds with keyboard shortcuts",
   "version": "1.0",
   "content_scripts": [
     {
@@ -13,5 +13,16 @@
       "all_frames": true
     }
   ],
-  "web_accessible_resources": ["contentscript.js"]
+  "web_accessible_resources": ["contentscript.js"],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  }
 }

@@ -9,14 +9,11 @@
 `5` / `Q` : Switch to Quad View
 
 `F` : Toggle Fullscreen  
-`T` : Toggle Large Video / Theater Mode (hides UI)
-
-`A` : Video Quality - Auto  
-`S` : Video Quality - High
+`T` : Toggle Theater Mode
 
 `Space` / `K` : Play / Pause  
-`Left Arrow` : Skip Back 30 sec  
-`Right Arrow` : Skip Forward 30 sec
+`Left Arrow` : Skip Back 30 Sec  
+`Right Arrow` : Skip Forward 30 Sec
 
 `Up Arrow` : Volume Up  
 `Down Arrow` : Volume Down  
@@ -25,17 +22,20 @@
 `]` : Audio from Right Channel  
 `\` : Audio from Left and Right
 
-`<` / `,` : Decrease Playback Speed by 0.25x  
-`>` / `.` : Increase Playback Speed by 0.25x  
+`G` : Skip Back 1 Day  
+`H` : Skip Back 1 Hour  
+`J` : Skip Back 5 Min  
+`K` : Play / Pause  
+`L` : Skip Forward 5 Min  
+`;` : Skip Forward 1 Hour  
+`'` : Skip Forward 1 Day
+
+`<` / `,` : Decrease Playback Speed  
+`>` / `.` : Increase Playback Speed  
 `/` / `?` : Set Playback Speed to 1.00x
 
-`G` : Skip Back 1 day  
-`H` : Skip Back 1 hour  
-`J` : Skip Back 5 min  
-`K` : Play / Pause  
-`L` : Skip Forward 5 min  
-`;` : Skip Forward 1 hour  
-`'` : Skip Forward 1 day
+`A` : Auto Video Quality  
+`S` : High Video Quality
 
 ### Setup Instructions
 

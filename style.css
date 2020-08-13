@@ -25,6 +25,7 @@
   display: inline !important;
   padding: 15px !important;
   border-radius: 10px !important;
+  font-family: 'Proxima Nova Regular', sans-serif;
 }
 
 body.largeVideo {

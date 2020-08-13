@@ -28,14 +28,14 @@ const keyboardShortcuts = [
   [[']'], () => setAudioChannel('right'), () => 'Right Audio'],
   [['\\'], () => setAudioChannel('stereo'), () => 'Stereo Audio'],
   [[' ', 'k'], () => playPause(), () => `${getIsPaused() ? 'Pause' : 'Play'}`],
-  [['h'], () => seek(-3600), () => '- 1 hour'],
-  [[';'], () => seek(3600), () => '+ 1 hour'],
-  [['j'], () => seek(-300), () => '- 5 min'],
-  [['l'], () => seek(300), () => '+ 5 min'],
-  [['g'], () => seekDays(-1), () => '- 1 day'],
-  [["'"], () => seekDays(1), () => '+ 1 day'],
-  [['ArrowLeft'], () => seek(-30), () => '- 30 sec'],
-  [['ArrowRight'], () => seek(30), () => '+ 30 sec'],
+  [['h'], () => seek(-3600), () => '- 1 Hour'],
+  [[';'], () => seek(3600), () => '+ 1 Hour'],
+  [['j'], () => seek(-300), () => '- 5 Min'],
+  [['l'], () => seek(300), () => '+ 5 Min'],
+  [['g'], () => seekDays(-1), () => '- 1 Day'],
+  [["'"], () => seekDays(1), () => '+ 1 Day'],
+  [['ArrowLeft'], () => seek(-30), () => '- 30s'],
+  [['ArrowRight'], () => seek(30), () => '+ 30s'],
   [['ArrowDown'], () => changeVolume(-0.2), () => `Volume ${volumeLevel.toFixed(1)}`],
   [['ArrowUp'], () => changeVolume(0.2), () => `Volume ${volumeLevel.toFixed(1)}`],
   [[',', '<'], () => changeSpeed(-0.25), () => `Speed ${currentSpeed.toFixed(2)}x`],
@@ -207,7 +207,9 @@ setInterval(
 //                            Selectively adjust
 //                               L/R balance
 
-// Alerts
+//
+//       UI Shortuct Alerts
+//
 
 var alert = document.createElement('div');
 var alertText = document.createElement('p');
