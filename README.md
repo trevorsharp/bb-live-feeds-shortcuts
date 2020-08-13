@@ -1,5 +1,7 @@
 ## BB Live Feeds Shortcuts (Chrome Extension)
 
+Easily control BB live feeds with keyboard shortcuts
+
 ### Keyboard Shortcuts
 
 `1` : Switch to Camera 1  
