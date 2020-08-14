@@ -45,8 +45,8 @@ document.onkeydown = event => {
   const matchingShortcut = keyboardShortcuts.find(shortcut => shortcut[0].includes(event.key));
   if (matchingShortcut) {
     event.preventDefault();
-    matchingShortcut[1]();
     showAlert(matchingShortcut[2]());
+    matchingShortcut[1]();
   }
 };
 
@@ -98,7 +98,7 @@ const seekDays = days => {
     if (date > currentDate) {
       setCamera(cameraNumber); // Go to live
     } else {
-      player.updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
+      videoPlayer.updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
     }
   });
 };
