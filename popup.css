@@ -35,6 +35,7 @@ body {
   background-color: rgb(64, 64, 64);
   color: white;
   padding: 10px 20px;
+  width: 260px;
   font-family: 'Proxima Nova';
   user-select: none;
 }
