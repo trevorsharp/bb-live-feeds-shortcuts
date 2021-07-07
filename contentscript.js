@@ -25,7 +25,7 @@ const keyboardShortcuts = [
   [['['], () => setAudioChannel('left'), () => 'Left Audio'],
   [[']'], () => setAudioChannel('right'), () => 'Right Audio'],
   [['\\'], () => setAudioChannel('stereo'), () => 'Stereo Audio'],
-  [[' ', 'k'], () => playPause(), () => `${getIsPaused() ? 'Pause' : 'Play'}`],
+  [[' ', 'k'], () => playPause(), () => `${getIsPaused() ? 'Play' : 'Pause'}`],
   [['h'], () => seek(-3600), () => '- 1 Hour'],
   [[';'], () => seek(3600), () => '+ 1 Hour'],
   [['j'], () => seek(-300), () => '- 5 Min'],
