@@ -224,6 +224,7 @@ var alertInterval;
 alertInterval = setInterval(() => {
   try {
     document.getElementById('content_BBLF_SKIN_UVPJS_CONTAINER').prepend(alert);
+    setCamera(5);
     clearInterval(alertInterval);
   } catch (error) { }
 }, 1000);
