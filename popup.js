@@ -16,9 +16,9 @@ const keyboardShortcuts = [
   ['&uarr;', 'Volume Up'],
   ['&darr;', 'Volume Down'],
   ['M', 'Mute / Unmute'],
-  ['[', 'Audio from Left Channel'],
-  [']', 'Audio from Right Channel'],
-  ['\\', 'Audio from Left and Right'],
+  ['[', 'Audio from Top'],
+  [']', 'Audio from Bottom'],
+  ['\\', 'Stereo Audio'],
   ['blank', 'blank'],
   ['G', 'Skip Back 1 Day'],
   ['H', 'Skip Back 1 Hour'],
@@ -30,7 +30,7 @@ const keyboardShortcuts = [
   ['blank', 'blank'],
   ['<', 'Decrease Playback Speed'],
   ['>', 'Increase Playback Speed'],
-  ['/', 'Set Playback Speed to 1.00x'],
+  ['/', 'Set Playback Speed to 1x'],
 ];
 
 const list = document.getElementById('shortcutList');

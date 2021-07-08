@@ -8,9 +8,10 @@ var audioContex = new AudioContext();
 var alreadySetUpNodes = [];
 var audioNodes = [];
 var volumeLevel = 1;
-var isMuted = false;
 
 var currentSpeed = 1;
+
+const getVideoElement = () => document.querySelector('video');
 
 const keyboardShortcuts = [
   [['1'], () => setCamera(1), () => 'Camera 1'],
@@ -21,11 +22,11 @@ const keyboardShortcuts = [
   [['q'], () => setCamera(5), () => 'Quad View'],
   [['f'], () => toggleFullscreen(), () => undefined],
   [['t'], () => toggleLargeVideo(), () => undefined],
-  [['m'], () => toggleMute(), () => `${isMuted ? 'Mute' : 'Unmute'}`],
-  [['['], () => setAudioChannel('left'), () => 'Left Audio'],
-  [[']'], () => setAudioChannel('right'), () => 'Right Audio'],
+  [['m'], () => toggleMute(), () => `${getVideoElement().muted ? 'Mute' : 'Unmute'}`],
+  [['['], () => setAudioChannel('left'), () => 'Top Audio'],
+  [[']'], () => setAudioChannel('right'), () => 'Bottom Audio'],
   [['\\'], () => setAudioChannel('stereo'), () => 'Stereo Audio'],
-  [[' ', 'k'], () => playPause(), () => `${getIsPaused() ? 'Play' : 'Pause'}`],
+  [[' ', 'k'], () => playPause(), () => `${getVideoElement().paused ? 'Pause' : 'Play'}`],
   [['h'], () => seek(-3600), () => '- 1 Hour'],
   [[';'], () => seek(3600), () => '+ 1 Hour'],
   [['j'], () => seek(-300), () => '- 5 Min'],
@@ -45,8 +46,8 @@ document.onkeydown = event => {
   const matchingShortcut = keyboardShortcuts.find(shortcut => shortcut[0].includes(event.key));
   if (matchingShortcut) {
     event.preventDefault();
-    showAlert(matchingShortcut[2]());
     matchingShortcut[1]();
+    showAlert(matchingShortcut[2]());
   }
 };
 
@@ -112,24 +113,24 @@ const toggleLargeVideo = () => {
   document.body.classList.toggle('largeVideo');
 };
 
-const getIsPaused = () => document.querySelector('video').paused;
-
 const playPause = () => {
-  const video = document.querySelector('video');
-  video.paused ? video.play() : video.pause();
-};
-
-const setVolume = volume => {
-  audioNodes.forEach(audioNode => (audioNode.gainNode.gain.value = volume));
+  getVideoElement().paused ? getVideoElement().play() : getVideoElement().pause();
 };
 
 const toggleMute = () => {
-  isMuted = !isMuted;
-  setVolume(isMuted ? 0 : volumeLevel);
+  getVideoElement().muted = !getVideoElement().muted;
 };
 
+const setVolume = level => {
+  audioNodes.forEach(audioNode => {
+    try {
+      audioNode.gainNode.gain.value = level;
+    } catch (error) { }
+  })
+}
+
 const changeVolume = amount => {
-  isMuted = false;
+  getVideoElement().muted = false;
   volumeLevel += amount;
   volumeLevel = volumeLevel > MAX_VOLUME ? MAX_VOLUME : volumeLevel;
   volumeLevel = volumeLevel < MIN_VOLUME ? MIN_VOLUME : volumeLevel;
@@ -148,7 +149,7 @@ const setAudioChannel = audioChannel =>
         audioNode.gainNode.connect(audioNode.destination, 0);
         audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
       }
-    } catch (error) {}
+    } catch (error) { }
   });
 
 setInterval(
@@ -207,7 +208,7 @@ alertText.id = 'shortcutAlertText';
 alert.className = 'hidden';
 alertText.innerHTML = '';
 
-var alertTimeout = setTimeout(() => {}, 10);
+var alertTimeout = setTimeout(() => { }, 10);
 
 const showAlert = message => {
   if (message) {
@@ -224,16 +225,5 @@ alertInterval = setInterval(() => {
   try {
     document.getElementById('content_BBLF_SKIN_UVPJS_CONTAINER').prepend(alert);
     clearInterval(alertInterval);
-  } catch (error) {}
-}, 1000);
-
-var fullscreenClickHandlerInterval;
-fullscreenClickHandlerInterval = setInterval(() => {
-  try {
-    document.getElementsByClassName('btn-full-screen')[0].addEventListener('click', () => {
-      document.getElementById('cbsi-player-embed').classList.remove('largeVideo');
-      document.body.classList.remove('largeVideo');
-    });
-    clearInterval(fullscreenClickHandlerInterval);
-  } catch (error) {}
+  } catch (error) { }
 }, 1000);
