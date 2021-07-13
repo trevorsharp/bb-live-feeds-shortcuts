@@ -8,6 +8,7 @@ const keyboardShortcuts = [
   ['blank', 'blank'],
   ['F', 'Toggle Fullscreen'],
   ['T', 'Toggle Theater Mode'],
+  ['P', 'Launch Picture-In-Picture'],
   ['blank', 'blank'],
   ['Space', 'Play / Pause'],
   ['&larr;', 'Skip Back 30 Sec'],

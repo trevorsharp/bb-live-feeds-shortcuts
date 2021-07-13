@@ -22,6 +22,7 @@ const keyboardShortcuts = [
   [['q'], () => setCamera(5), () => 'Quad View'],
   [['f'], () => toggleFullscreen(), () => undefined],
   [['t'], () => toggleLargeVideo(), () => undefined],
+  [['p'], () => launchPictureInPicture(), () => undefined],
   [['m'], () => toggleMute(), () => `${getVideoElement().muted ? 'Mute' : 'Unmute'}`],
   [['['], () => setAudioChannel('left'), () => 'Top Audio'],
   [[']'], () => setAudioChannel('right'), () => 'Bottom Audio'],
@@ -111,6 +112,10 @@ const toggleFullscreen = () => {
 const toggleLargeVideo = () => {
   document.getElementById('cbsi-player-embed').classList.toggle('largeVideo');
   document.body.classList.toggle('largeVideo');
+};
+
+const launchPictureInPicture = () => {
+  getVideoElement().requestPictureInPicture();
 };
 
 const playPause = () => {
@@ -225,6 +230,7 @@ alertInterval = setInterval(() => {
   try {
     document.getElementById('content_BBLF_SKIN_UVPJS_CONTAINER').prepend(alert);
     setCamera(5);
+    document.querySelector('#bbl-tab-flashbacks>a').click()
     clearInterval(alertInterval);
   } catch (error) { }
 }, 1000);

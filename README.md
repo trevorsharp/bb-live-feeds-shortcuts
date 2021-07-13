@@ -12,6 +12,7 @@ Easily control BB live feeds with keyboard shortcuts
 
 `F` : Toggle Fullscreen  
 `T` : Toggle Theater Mode
+`P` : Launch Picture-In-Picture
 
 `Space` / `K` : Play / Pause  
 `Left Arrow` : Skip Back 30 Sec  
@@ -20,9 +21,9 @@ Easily control BB live feeds with keyboard shortcuts
 `Up Arrow` : Volume Up  
 `Down Arrow` : Volume Down  
 `M` : Mute / Unmute  
-`[` : Audio from Left Channel  
-`]` : Audio from Right Channel  
-`\` : Audio from Left and Right
+`[` : Audio from Top
+`]` : Audio from Bottom 
+`\` : Stereo Audio
 
 `G` : Skip Back 1 Day  
 `H` : Skip Back 1 Hour  
