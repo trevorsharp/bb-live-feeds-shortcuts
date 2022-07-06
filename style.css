@@ -1,7 +1,9 @@
 #shortcutAlert {
   width: 100% !important;
   position: absolute !important;
-  top: 43% !important;
+  top: 50% !important;
+  transform: translateY(calc(-50% - 22px));
+  -webkit-transform: translateY(calc(-50% - 22px));
   text-align: center !important;
   z-index: 120000 !important;
   margin: auto !important;
@@ -25,7 +27,7 @@
   display: inline !important;
   padding: 15px !important;
   border-radius: 10px !important;
-  font-family: 'Proxima Nova Regular', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
 }
 
 body.largeVideo {
@@ -39,4 +41,28 @@ body.largeVideo {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
+}
+
+#video_BBLF_SKIN_UVPJS_CONTAINER {
+  width: 100% !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(calc(-50% - 22px));
+  -webkit-transform: translateY(calc(-50% - 22px));
+  visibility: visible !important;
+  height: auto !important;
+  max-height: calc(100% - 45px) !important;
+  margin-right: inherit !important;
+  margin-left: inherit !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+#bbl-promo {
+  visibility: hidden;
+}
+
+.controls {
+  display: block !important;
+  opacity: 1 !important;
 }

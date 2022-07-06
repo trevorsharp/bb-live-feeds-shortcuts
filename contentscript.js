@@ -4,7 +4,7 @@ const MIN_SPEED = 0.25;
 const MAX_VOLUME = 4;
 const MIN_VOLUME = 0.2;
 
-var audioContex = new AudioContext();
+var audioContex = null;
 var alreadySetUpNodes = [];
 var audioNodes = [];
 var volumeLevel = 1;
@@ -12,6 +12,7 @@ var volumeLevel = 1;
 var currentSpeed = 1;
 
 const getVideoElement = () => document.querySelector('video');
+const getVideoPlayer = () => window.$B.videoPlayer;
 
 const keyboardShortcuts = [
   [['1'], () => setCamera(1), () => 'Camera 1'],
@@ -41,68 +42,59 @@ const keyboardShortcuts = [
   [[',', '<'], () => changeSpeed(-0.25), () => `Speed ${currentSpeed.toFixed(2)}x`],
   [['.', '>'], () => changeSpeed(0.25), () => `Speed ${currentSpeed.toFixed(2)}x`],
   [['/', '?'], () => setSpeed(1), () => `Speed ${currentSpeed.toFixed(2)}x`],
+  [['d'], () => showDubugMenu(), () => undefined],
 ];
 
-document.onkeydown = event => {
-  const matchingShortcut = keyboardShortcuts.find(shortcut => shortcut[0].includes(event.key));
+document.onkeydown = (event) => {
+  const matchingShortcut = keyboardShortcuts.find((shortcut) => shortcut[0].includes(event.key));
   if (matchingShortcut) {
     event.preventDefault();
+
+    if (audioContex === null) {
+      audioContex = new window.AudioContext();
+      setUpAudio();
+    }
+
     matchingShortcut[1]();
     showAlert(matchingShortcut[2]());
   }
 };
 
-const changeSpeed = amount => {
+const changeSpeed = (amount) => {
   currentSpeed += amount;
   currentSpeed = currentSpeed > MAX_SPEED ? MAX_SPEED : currentSpeed;
   currentSpeed = currentSpeed < MIN_SPEED ? MIN_SPEED : currentSpeed;
   setSpeed(currentSpeed);
 };
 
-const setSpeed = speed => {
+const setSpeed = (speed) => {
   currentSpeed = speed;
-  $(function () {
-    const videoPlayer = $B.videoPlayer;
-    const player = videoPlayer.playerInstance.CVI_Mgr.RPM.currRP.facade.player;
-    player.setPlaybackRate(speed);
-  });
+  getVideoPlayer().playerInstance.CVI_Mgr.RPM.currRP.facade.player.setPlaybackRate(speed);
 };
 
-const setCamera = index => {
-  $(function () {
-    const videoPlayer = $B.videoPlayer;
-    videoPlayer.switchCamera(index);
-    videoPlayer.highlightCamera(index);
-  });
+const setCamera = (index) => {
+  getVideoPlayer().switchCamera(index);
+  getVideoPlayer().highlightCamera(index);
 };
 
-const seek = secs => {
-  $(function () {
-    const videoPlayer = $B.videoPlayer;
-    const bblfJsPlayer = videoPlayer.playerApi.bblfJsPlayer;
-    bblfJsPlayer.rewind(-1 * secs);
-  });
+const seek = (secs) => {
+  getVideoPlayer().playerApi.bblfJsPlayer.rewind(-1 * secs);
 };
 
-const seekDays = days => {
-  $(function () {
-    const videoPlayer = $B.videoPlayer;
-    const bblfJsPlayer = videoPlayer.playerApi.bblfJsPlayer;
+const seekDays = (days) => {
+  var date = new Date(getVideoPlayer().playerApi.bblfJsPlayer.absoluteDateTime);
+  date.setDate(date.getDate() + days);
 
-    var date = new Date(bblfJsPlayer.absoluteDateTime);
-    date.setDate(date.getDate() + days);
+  var currentDate = new Date(Date.now());
+  currentDate.setHours(0, 0, 0, 0);
 
-    var currentDate = new Date(Date.now());
-    currentDate.setHours(0, 0, 0, 0);
+  const cameraNumber = getVideoPlayer().getSavedCameraAngle();
 
-    const cameraNumber = videoPlayer.getSavedCameraAngle();
-
-    if (date > currentDate) {
-      setCamera(cameraNumber); // Go to live
-    } else {
-      videoPlayer.updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
-    }
-  });
+  if (date > currentDate) {
+    setCamera(cameraNumber); // Go to live
+  } else {
+    getVideoPlayer().updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
+  }
 };
 
 const toggleFullscreen = () => {
@@ -122,19 +114,23 @@ const playPause = () => {
   getVideoElement().paused ? getVideoElement().play() : getVideoElement().pause();
 };
 
+const showDubugMenu = () => {
+  document.getElementById('diagnostic_BBLF_SKIN_UVPJS_CONTAINER').style = 'display: block;';
+};
+
 const toggleMute = () => {
   getVideoElement().muted = !getVideoElement().muted;
 };
 
-const setVolume = level => {
-  audioNodes.forEach(audioNode => {
+const setVolume = (level) => {
+  audioNodes.forEach((audioNode) => {
     try {
       audioNode.gainNode.gain.value = level;
-    } catch (error) { }
-  })
-}
+    } catch (error) {}
+  });
+};
 
-const changeVolume = amount => {
+const changeVolume = (amount) => {
   getVideoElement().muted = false;
   volumeLevel += amount;
   volumeLevel = volumeLevel > MAX_VOLUME ? MAX_VOLUME : volumeLevel;
@@ -142,8 +138,8 @@ const changeVolume = amount => {
   setVolume(volumeLevel);
 };
 
-const setAudioChannel = audioChannel =>
-  audioNodes.forEach(audioNode => {
+const setAudioChannel = (audioChannel) =>
+  audioNodes.forEach((audioNode) => {
     try {
       if (audioChannel === 'left' || audioChannel === 'right') {
         audioNode.gainLeft.gain.value = audioChannel === 'right' ? 0 : 1;
@@ -154,33 +150,32 @@ const setAudioChannel = audioChannel =>
         audioNode.gainNode.connect(audioNode.destination, 0);
         audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
       }
-    } catch (error) { }
+    } catch (error) {}
   });
 
-setInterval(
-  () =>
-    document.querySelectorAll('video,audio').forEach(node => {
-      if (!alreadySetUpNodes.includes(node)) {
-        alreadySetUpNodes.push(node);
-        audioNode = {};
-        audioNode.source = audioContex.createMediaElementSource(node);
-        audioNode.destination = audioContex.destination;
-        audioNode.gainNode = audioContex.createGain();
-        audioNode.gainNode.gain.value = volumeLevel;
-        audioNode.source.connect(audioNode.gainNode, 0);
-        audioNode.gainNode.connect(audioNode.destination, 0);
-        audioNode.splitter = audioContex.createChannelSplitter(2);
-        audioNode.gainLeft = audioContex.createGain();
-        audioNode.gainRight = audioContex.createGain();
-        audioNode.splitter.connect(audioNode.gainLeft, 0);
-        audioNode.splitter.connect(audioNode.gainRight, 1);
-        audioNode.gainLeft.connect(audioNode.destination, 0);
-        audioNode.gainRight.connect(audioNode.destination, 0);
-        audioNodes.push(audioNode);
-      }
-    }),
-  1000
-);
+const setUpAudio = () =>
+  document.querySelectorAll('video,audio').forEach((node) => {
+    if (!alreadySetUpNodes.includes(node)) {
+      alreadySetUpNodes.push(node);
+      audioNode = {};
+      audioNode.source = audioContex.createMediaElementSource(node);
+      audioNode.destination = audioContex.destination;
+      audioNode.gainNode = audioContex.createGain();
+      audioNode.gainNode.gain.value = volumeLevel;
+      audioNode.source.connect(audioNode.gainNode, 0);
+      audioNode.gainNode.connect(audioNode.destination, 0);
+      audioNode.splitter = audioContex.createChannelSplitter(2);
+      audioNode.gainLeft = audioContex.createGain();
+      audioNode.gainRight = audioContex.createGain();
+      audioNode.splitter.connect(audioNode.gainLeft, 0);
+      audioNode.splitter.connect(audioNode.gainRight, 1);
+      audioNode.gainLeft.connect(audioNode.destination, 0);
+      audioNode.gainRight.connect(audioNode.destination, 0);
+      audioNodes.push(audioNode);
+    }
+  });
+
+setInterval(() => audioContex !== null && setUpAudio(), 1000);
 
 //      Audio Flow Diagram
 //
@@ -213,9 +208,9 @@ alertText.id = 'shortcutAlertText';
 alert.className = 'hidden';
 alertText.innerHTML = '';
 
-var alertTimeout = setTimeout(() => { }, 10);
+var alertTimeout = setTimeout(() => {}, 10);
 
-const showAlert = message => {
+const showAlert = (message) => {
   if (message) {
     alert.className = 'hidden';
     alertText.innerHTML = message;
@@ -225,12 +220,13 @@ const showAlert = message => {
   }
 };
 
-var alertInterval;
-alertInterval = setInterval(() => {
+var startupInterval;
+startupInterval = setInterval(() => {
   try {
     document.getElementById('content_BBLF_SKIN_UVPJS_CONTAINER').prepend(alert);
     setCamera(5);
-    document.querySelector('#bbl-tab-flashbacks>a').click()
-    clearInterval(alertInterval);
-  } catch (error) { }
+    document.querySelector('#bbl-tab-flashbacks>a').click();
+    toggleLargeVideo();
+    clearInterval(startupInterval);
+  } catch (error) {}
 }, 1000);
