@@ -12,11 +12,11 @@
   "web_accessible_resources": [
     {
       "resources": ["contentscript.js", "style.css"],
-      "matches": ["https://*/*"]
+      "matches": ["https://*.paramountplus.com/*"]
     }
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_icon": {
       "48": "images/icon48.png",
       "128": "images/icon128.png"

@@ -17,7 +17,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.url !== 'https://www.paramountplus.com/shows/big_brother/live_feed/stream/') return;
 
     chrome.scripting.executeScript({
-      target: { tabId: tabId },
+      target: { tabId },
       function: injectCode,
     });
   }

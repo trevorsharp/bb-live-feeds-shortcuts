@@ -1,12 +1,11 @@
 const MAX_SPEED = 5;
 const MIN_SPEED = 0.25;
 
-const MAX_VOLUME = 4;
+const MAX_VOLUME = 10;
 const MIN_VOLUME = 0.2;
 
 var audioContex = null;
-var alreadySetUpNodes = [];
-var audioNodes = [];
+var audioNode = {};
 var volumeLevel = 1;
 
 var currentSpeed = 1;
@@ -77,8 +76,18 @@ const setCamera = (index) => {
   getVideoPlayer().highlightCamera(index);
 };
 
+const goLive = () => document.querySelector('.btn-go-live').click();
+
 const seek = (secs) => {
-  getVideoPlayer().playerApi.bblfJsPlayer.rewind(-1 * secs);
+  if (document.querySelector('.btn-go-live.disabled')) document.querySelector('.btn-rewind').click();
+
+  var date = new Date(getVideoPlayer().playerApi.bblfJsPlayer.absoluteDateTime);
+  date.setTime(date.getTime() + 1000 * secs);
+
+  var currentDate = new Date(Date.now());
+
+  if (date > currentDate) goLive();
+  else getVideoPlayer().playerApi.bblfJsPlayer.rewind(-1 * secs);
 };
 
 const seekDays = (days) => {
@@ -86,49 +95,34 @@ const seekDays = (days) => {
   date.setDate(date.getDate() + days);
 
   var currentDate = new Date(Date.now());
-  currentDate.setHours(0, 0, 0, 0);
 
-  const cameraNumber = getVideoPlayer().getSavedCameraAngle();
+  var camera = getVideoPlayer().getSavedCameraAngle();
 
-  if (date > currentDate) {
-    setCamera(cameraNumber); // Go to live
-  } else {
-    getVideoPlayer().updateStream({ camera: cameraNumber, datetime: date, type: 'Flashback' });
-  }
+  if (date > currentDate) goLive();
+  else
+    getVideoPlayer().updateStream({
+      camera,
+      datetime: date,
+      type: 'Flashback',
+    });
 };
 
-const toggleFullscreen = () => {
-  document.getElementsByClassName('btn-full-screen')[0].click();
-};
+const toggleFullscreen = () => document.getElementsByClassName('btn-full-screen')[0].click();
 
 const toggleLargeVideo = () => {
   document.getElementById('cbsi-player-embed').classList.toggle('largeVideo');
   document.body.classList.toggle('largeVideo');
 };
 
-const launchPictureInPicture = () => {
-  getVideoElement().requestPictureInPicture();
-};
+const launchPictureInPicture = () => getVideoElement().requestPictureInPicture();
 
-const playPause = () => {
-  getVideoElement().paused ? getVideoElement().play() : getVideoElement().pause();
-};
+const playPause = () => (getVideoElement().paused ? getVideoElement().play() : getVideoElement().pause());
 
-const showDubugMenu = () => {
-  document.getElementById('diagnostic_BBLF_SKIN_UVPJS_CONTAINER').style = 'display: block;';
-};
+const showDubugMenu = () => (document.getElementById('diagnostic_BBLF_SKIN_UVPJS_CONTAINER').style = 'display: block;');
 
-const toggleMute = () => {
-  getVideoElement().muted = !getVideoElement().muted;
-};
+const toggleMute = () => (getVideoElement().muted = !getVideoElement().muted);
 
-const setVolume = (level) => {
-  audioNodes.forEach((audioNode) => {
-    try {
-      audioNode.gainNode.gain.value = level;
-    } catch (error) {}
-  });
-};
+const setVolume = (level) => (audioNode.gainNode.gain.value = level);
 
 const changeVolume = (amount) => {
   getVideoElement().muted = false;
@@ -138,44 +132,37 @@ const changeVolume = (amount) => {
   setVolume(volumeLevel);
 };
 
-const setAudioChannel = (audioChannel) =>
-  audioNodes.forEach((audioNode) => {
-    try {
-      if (audioChannel === 'left' || audioChannel === 'right') {
-        audioNode.gainLeft.gain.value = audioChannel === 'right' ? 0 : 1;
-        audioNode.gainRight.gain.value = audioChannel === 'left' ? 0 : 1;
-        audioNode.gainNode.connect(audioNode.splitter, 0, 0);
-        audioNode.gainNode.disconnect(audioNode.destination, 0);
-      } else {
-        audioNode.gainNode.connect(audioNode.destination, 0);
-        audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
-      }
-    } catch (error) {}
-  });
-
-const setUpAudio = () =>
-  document.querySelectorAll('video,audio').forEach((node) => {
-    if (!alreadySetUpNodes.includes(node)) {
-      alreadySetUpNodes.push(node);
-      audioNode = {};
-      audioNode.source = audioContex.createMediaElementSource(node);
-      audioNode.destination = audioContex.destination;
-      audioNode.gainNode = audioContex.createGain();
-      audioNode.gainNode.gain.value = volumeLevel;
-      audioNode.source.connect(audioNode.gainNode, 0);
+const setAudioChannel = (audioChannel) => {
+  try {
+    if (audioChannel === 'left' || audioChannel === 'right') {
+      audioNode.gainLeft.gain.value = audioChannel === 'right' ? 0 : 1;
+      audioNode.gainRight.gain.value = audioChannel === 'left' ? 0 : 1;
+      audioNode.gainNode.connect(audioNode.splitter, 0, 0);
+      audioNode.gainNode.disconnect(audioNode.destination, 0);
+    } else {
       audioNode.gainNode.connect(audioNode.destination, 0);
-      audioNode.splitter = audioContex.createChannelSplitter(2);
-      audioNode.gainLeft = audioContex.createGain();
-      audioNode.gainRight = audioContex.createGain();
-      audioNode.splitter.connect(audioNode.gainLeft, 0);
-      audioNode.splitter.connect(audioNode.gainRight, 1);
-      audioNode.gainLeft.connect(audioNode.destination, 0);
-      audioNode.gainRight.connect(audioNode.destination, 0);
-      audioNodes.push(audioNode);
+      audioNode.gainNode.disconnect(audioNode.splitter, 0, 0);
     }
-  });
+  } catch (_) {}
+};
 
-setInterval(() => audioContex !== null && setUpAudio(), 1000);
+const setUpAudio = () => {
+  if (!audioNode.source) {
+    audioNode.source = audioContex.createMediaElementSource(getVideoElement());
+    audioNode.destination = audioContex.destination;
+    audioNode.gainNode = audioContex.createGain();
+    audioNode.gainNode.gain.value = volumeLevel;
+    audioNode.source.connect(audioNode.gainNode, 0);
+    audioNode.gainNode.connect(audioNode.destination, 0);
+    audioNode.splitter = audioContex.createChannelSplitter(2);
+    audioNode.gainLeft = audioContex.createGain();
+    audioNode.gainRight = audioContex.createGain();
+    audioNode.splitter.connect(audioNode.gainLeft, 0);
+    audioNode.splitter.connect(audioNode.gainRight, 1);
+    audioNode.gainLeft.connect(audioNode.destination, 0);
+    audioNode.gainRight.connect(audioNode.destination, 0);
+  }
+};
 
 //      Audio Flow Diagram
 //
@@ -194,10 +181,6 @@ setInterval(() => audioContex !== null && setUpAudio(), 1000);
 //                                                  +-------------+
 //                            Selectively adjust
 //                               L/R balance
-
-//
-//       UI Shortuct Alerts
-//
 
 var alert = document.createElement('div');
 var alertText = document.createElement('p');
@@ -228,5 +211,5 @@ startupInterval = setInterval(() => {
     document.querySelector('#bbl-tab-flashbacks>a').click();
     toggleLargeVideo();
     clearInterval(startupInterval);
-  } catch (error) {}
+  } catch (_) {}
 }, 1000);
