@@ -1,8 +1,8 @@
 const MAX_SPEED = 5;
-const MIN_SPEED = 0.25;
+const MIN_SPEED = 0.5;
 
 const MAX_VOLUME = 10;
-const MIN_VOLUME = 0.2;
+const MIN_VOLUME = 0.5;
 
 var audioContex = null;
 var audioNode = {};
@@ -36,10 +36,10 @@ const keyboardShortcuts = [
   [["'"], () => seekDays(1), () => '+ 1 Day'],
   [['ArrowLeft'], () => seek(-30), () => '- 30s'],
   [['ArrowRight'], () => seek(30), () => '+ 30s'],
-  [['ArrowDown'], () => changeVolume(-0.2), () => `Volume ${volumeLevel.toFixed(1)}`],
-  [['ArrowUp'], () => changeVolume(0.2), () => `Volume ${volumeLevel.toFixed(1)}`],
-  [[',', '<'], () => changeSpeed(-0.25), () => `Speed ${currentSpeed.toFixed(2)}x`],
-  [['.', '>'], () => changeSpeed(0.25), () => `Speed ${currentSpeed.toFixed(2)}x`],
+  [['ArrowDown'], () => changeVolume(-0.5), () => `Volume ${volumeLevel.toFixed(1)}`],
+  [['ArrowUp'], () => changeVolume(0.5), () => `Volume ${volumeLevel.toFixed(1)}`],
+  [[',', '<'], () => changeSpeed(-0.5), () => `Speed ${currentSpeed.toFixed(2)}x`],
+  [['.', '>'], () => changeSpeed(0.5), () => `Speed ${currentSpeed.toFixed(2)}x`],
   [['/', '?'], () => setSpeed(1), () => `Speed ${currentSpeed.toFixed(2)}x`],
   [['d'], () => showDubugMenu(), () => undefined],
 ];
