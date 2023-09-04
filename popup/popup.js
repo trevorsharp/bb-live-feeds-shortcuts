@@ -17,8 +17,8 @@ const keyboardShortcuts = [
   ['&uarr;', 'Volume Up'],
   ['&darr;', 'Volume Down'],
   ['M', 'Mute / Unmute'],
-  ['[', 'Audio from Top'],
-  [']', 'Audio from Bottom'],
+  ['[', 'Left Audio'],
+  [']', 'Right Audio'],
   ['\\', 'Stereo Audio'],
   ['blank', 'blank'],
   ['G', 'Skip Back 1 Day'],
@@ -36,7 +36,7 @@ const keyboardShortcuts = [
 
 const list = document.getElementById('shortcutList');
 
-keyboardShortcuts.forEach(shortcut => {
+keyboardShortcuts.forEach((shortcut) => {
   if (shortcut.includes('blank')) {
     var lineBreak = document.createElement('span');
     lineBreak.classList.add('lineBreak');
