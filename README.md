@@ -21,8 +21,8 @@ Easily control BB live feeds with keyboard shortcuts
 `Up Arrow` : Volume Up  
 `Down Arrow` : Volume Down  
 `M` : Mute / Unmute  
-`[` : Audio from Top  
-`]` : Audio from Bottom  
+`[` : Left Audio  
+`]` : Right Audio  
 `\` : Stereo Audio
 
 `G` : Skip Back 1 Day  
